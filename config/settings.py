@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'debug_toolbar',
     'parser.apps.ParserConfig',
+    'accounts.apps.AccountsConfig',
     
     'rest_framework',
     'django_filters',
