@@ -34,7 +34,7 @@ import os
 
 
 
-class Converter(APIView):
+class ImageParser(APIView):
 
     def post(self, request):
 
@@ -47,9 +47,12 @@ class Converter(APIView):
 
         id = B64_Table.objects.create(b64=b64)
 
+        
+
         data = {
             "status": "accepted",
-            "url": f"http://127.0.0.1:8000/v1/{id.unique_id}"
+            "code": 200,
+            "url": f"http://127.0.0.1:8000/v1/{id.created_at}/{id.unique_id}"
 
         }
 
@@ -61,12 +64,15 @@ class Converter(APIView):
 
 class ViewContent(APIView):
 
-    def get(self, request, id):
+    def get(self, request, cr_at, id):
 
         try:
             b64 = B64_Table.objects.get(unique_id=id)
         except B64_Table.DoesNotExist:
             return Response({"status": "not found"}, status=404)
+        
+        if cr_at != str(b64.created_at):
+            return Response({"status": "wrong timeframe"}, status=404)
         
         image = b64.b64
         img_bytes = base64.b64decode(image)

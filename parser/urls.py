@@ -10,7 +10,7 @@ from .views import *
 
 urlpatterns = [
 
-    path('content/', Converter.as_view()),
-    path('<str:id>/', ViewContent.as_view()),
+    path('content/', ImageParser.as_view()),
+    path('<str:cr_at>/<str:id>/', ViewContent.as_view()),
    
 ]
