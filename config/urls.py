@@ -7,11 +7,10 @@ from drf_yasg.views import get_schema_view # new
 from drf_yasg import openapi 
 
 schema_view = get_schema_view(
-
     openapi.Info(
-        title="parser",
-        default_version="v1",
-        description="path",
+        title="Parser",
+        default_version="v1.1",
+        description="adelekecode",
         terms_of_service="",
         contact=openapi.Contact(email="oluwafemiadeleke13@gmail.com"),
         license=openapi.License(name="MIT License"),
@@ -24,8 +23,8 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('admin/', admin.site.urls),
-    path('v1/', include('parser.urls')),
     path('v1/', include('accounts.urls')),
+    path('v1/', include('parser.urls')),
 ]
 
 if settings.DEBUG:

@@ -1,3 +1,6 @@
+from django.shortcuts import render
+from accounts.permissions import *
+# Create your views here.
 from django.http import HttpResponse
 import base64
 from .serializers import *
@@ -36,18 +39,23 @@ import os
 
 class ImageParser(APIView):
 
+
     def post(self, request):
 
+        user = AuthHandler(request)
 
         serializer = Content(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         image = serializer.validated_data['image']
         b64 = base64.b64encode(image.read()).decode('utf-8')
+        print(request.user)
 
-        id = B64_Table.objects.create(b64=b64)
+        id = ImageEncoding.objects.create(
+            b64=b64,
+            user=user
+        )
 
-        
 
         data = {
             "status": "accepted",
@@ -60,15 +68,13 @@ class ImageParser(APIView):
     
 
 
-
-
 class ViewContent(APIView):
 
     def get(self, request, cr_at, id):
 
         try:
-            b64 = B64_Table.objects.get(unique_id=id)
-        except B64_Table.DoesNotExist:
+            b64 = ImageEncoding.objects.get(unique_id=id)
+        except ImageEncoding.DoesNotExist:
             return Response({"status": "not found"}, status=404)
         
         if cr_at != str(b64.created_at):

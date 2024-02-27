@@ -21,6 +21,11 @@ load_dotenv(find_dotenv())
 
 
 
+    
+# FIREBASE_CREDENTIALS = os.getenv("FIREBASE_CREDENTIALS")
+
+# cred = credentials.Certificate(json.loads(FIREBASE_CREDENTIALS))
+# firebase_admin.initialize_app(cred)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,8 +36,8 @@ SECRET_KEY = os.getenv('DJANGO_SECRET')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-CSRF_TRUSTED_ORIGINS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['http://localhost', 'http://127.0.0.1']
 
 
 
@@ -49,8 +54,10 @@ INSTALLED_APPS = [
 
     'django_extensions',
     'debug_toolbar',
-    'parser.apps.ParserConfig',
+
     'accounts.apps.AccountsConfig',
+    'parser',
+    "social_auth",
     
     'rest_framework',
     'django_filters',
@@ -64,6 +71,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -137,24 +145,60 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-DEFAULT_FILE_STORAGE = ''
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+##AWS S3 settings
+
+AWS_ACCESS_KEY_ID = os.getenv("AWS_Access_Key")
+AWS_SECRET_ACCESS_KEY = os.getenv("AWS_Secret_Access_Key")
+AWS_S3_REGION_NAME = os.getenv("AWS_Storage_Region")
+AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_Storage_Bucket_Name")
+# AWS_CLOUDFRONT_KEY_ID = os.getenv("AWS_Cloudfront_Key_ID")
+# AWS_CLOUDFRONT_KEY = str(os.getenv("AWS_Cloudfront_Private_Key").encode('utf-8').strip())
+# print(AWS_CLOUDFRONT_KEY)
+
+AWS_QUERYSTRING_EXPIRE = 180
 
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+AUTH_USER_MODEL = 'accounts.User'
+
+
+
+# DJOSER = {
+#     "USER_ID_FIELD" : "id",
+#     'LOGIN_FIELD': 'email',
+#     'USER_CREATE_PASSWORD_RETYPE': True,
+#     'USERNAME_CHANGED_EMAIL_CONFIRMATION':True,
+#     'PASSWORD_CHANGED_EMAIL_CONFIRMATION':True,
+#     'SEND_ACTIVATION_EMAIL':False,
+#     'SEND_CONFIRMATION_EMAIL':False,
+#     'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
+#     'USERNAME_RESET_CONFIRM_URL': 'username/reset/confirm/{uid}/{token}',
+#     "PASSWORD_RESET_CONFIRM_RETYPE" : True,
+#     "SET_PASSWORD_RETYPE" : True,
+#     "PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND":True,
+#     'ACTIVATION_URL' : 'activate/{uid}/{token}',
+#     'SERIALIZERS':{
+#         'user_create': 'accounts.serializers.UserRegistrationSerializer',
+#         'user': 'accounts.serializers.CustomUserSerializer',
+#         'user_delete': 'accounts.serializers.UserDeleteSerializer',
+#         "current_user" : 'accounts.serializers.CustomUserSerializer',
+#     },
+#     "EMAIL" : {
+#         'password_reset': 'accounts.emails.CustomPasswordResetEmail',  
+#     } 
+# }
 
 
 REST_FRAMEWORK = {
 
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-
-   'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.JSONRenderer'
-    ],
+    # 'DEFAULT_AUTHENTICATION_CLASSES': (
+    #     'rest_framework_simplejwt.authentication.JWTAuthentication',
+    # ),
 
 
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
@@ -163,6 +207,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
+
     'ACCESS_TOKEN_LIFETIME': timedelta(days=3),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=5),
     'UPDATE_LAST_LOGIN': True,

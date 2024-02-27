@@ -5,9 +5,11 @@ from rest_framework import serializers
 
 
 
-class B64_TableSerializer(serializers.ModelSerializer):
+class EncodingSerializer(serializers.ModelSerializer):
+
+    
     class Meta:
-        model = B64_Table
+        model = ImageEncoding
         fields = '__all__'
 
 

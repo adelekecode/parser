@@ -13,11 +13,12 @@ from .helpers import unique_id
 
 
 
-class B64_Table(models.Model):
+class ImageEncoding(models.Model):
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     unique_id = models.CharField(max_length=100, unique=True, blank=True, null=True)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="encoded_images")
     b64 = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
