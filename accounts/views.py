@@ -270,7 +270,11 @@ class CreateUserSK(APIView):
         except Exception as e:
             return Response({"error": f"{e}", "message": "user with this email already exist"}, status=status.HTTP_400_BAD_REQUEST)
 
-        data = CustomUserSerializer(user).data
+        data = {
+            "status": "success",
+            "message": "account created & auth_key sent to your mail",
+            "code": "201"
+        }
 
         return Response(data, status=status.HTTP_201_CREATED)
 
