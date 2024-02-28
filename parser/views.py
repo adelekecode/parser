@@ -59,7 +59,6 @@ class ImageParser(APIView):
 
         image = serializer.validated_data['image']
         b64 = base64.b64encode(image.read()).decode('utf-8')
-        print(request.user)
 
         id = ImageEncoding.objects.create(
             b64=b64,
