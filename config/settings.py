@@ -21,12 +21,6 @@ load_dotenv(find_dotenv())
 
 
 
-    
-# FIREBASE_CREDENTIALS = os.getenv("FIREBASE_CREDENTIALS")
-
-# cred = credentials.Certificate(json.loads(FIREBASE_CREDENTIALS))
-# firebase_admin.initialize_app(cred)
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -44,6 +38,7 @@ CSRF_TRUSTED_ORIGINS = ['http://localhost', 'http://127.0.0.1', 'https://adeleke
 
 # Application definition
 INSTALLED_APPS = [
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -175,6 +170,9 @@ REST_FRAMEWORK = {
     #     'rest_framework_simplejwt.authentication.JWTAuthentication',
     # ),
 
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer'
+    ],
 
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     # "PAGE_SIZE": 10,
@@ -320,24 +318,24 @@ if os.getenv("ENVIRONMENT") == "production":
 
 
 
-if os.getenv("ENVIRONMENT") == "development":
+if os.getenv("ENVIRONMENT") == "local_pc":
 
     DEBUG = True
 
    
-    # DATABASES = {
-    #         'default': {
-    #             'ENGINE': 'django.db.backends.sqlite3',
-    #             'NAME': BASE_DIR / 'db.sqlite3'
-    #         }
-    #     }
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3'
+        }
+    }
 
 
 
 if os.getenv("ENVIRONMENT") == "local":
 
     DEBUG = True
-    
+
 
     DATABASES = {
         'default': {
@@ -348,5 +346,19 @@ if os.getenv("ENVIRONMENT") == "local":
             'PASSWORD': os.getenv("db_password"),
             'PORT': os.getenv("db_port")
 
+        }
+    }
+
+
+
+if os.getenv("ENVIRONMENT") == "dev":
+
+    DEBUG = True
+
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3'
         }
     }

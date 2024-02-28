@@ -31,10 +31,20 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 import requests
 import os
 
+url = os.getenv("base_url")
 
 
+class Welcome(APIView):
 
+    def get(self, request):
 
+        data = {
+            "status": "all systems go!",
+            "code": 200,
+            "message": "welcome to the parser api"
+        }
+
+        return Response(data, status=200)
 
 
 class ImageParser(APIView):
@@ -60,7 +70,7 @@ class ImageParser(APIView):
         data = {
             "status": "accepted",
             "code": 200,
-            "url": f"https://adelekecode.dannonapi.com/v1/{id.created_at}/{id.unique_id}"
+            "url": f"{url}/v1/{id.created_at}/{id.unique_id}"
 
         }
 
