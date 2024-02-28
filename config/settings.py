@@ -36,8 +36,8 @@ SECRET_KEY = os.getenv('DJANGO_SECRET')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
-CSRF_TRUSTED_ORIGINS = ['http://localhost', 'http://127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'adelekecode.dannonapi.com']
+CSRF_TRUSTED_ORIGINS = ['http://localhost', 'http://127.0.0.1', 'https://adelekecode.dannonapi.com']
 
 
 
@@ -167,31 +167,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'accounts.User'
 
 
-
-# DJOSER = {
-#     "USER_ID_FIELD" : "id",
-#     'LOGIN_FIELD': 'email',
-#     'USER_CREATE_PASSWORD_RETYPE': True,
-#     'USERNAME_CHANGED_EMAIL_CONFIRMATION':True,
-#     'PASSWORD_CHANGED_EMAIL_CONFIRMATION':True,
-#     'SEND_ACTIVATION_EMAIL':False,
-#     'SEND_CONFIRMATION_EMAIL':False,
-#     'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
-#     'USERNAME_RESET_CONFIRM_URL': 'username/reset/confirm/{uid}/{token}',
-#     "PASSWORD_RESET_CONFIRM_RETYPE" : True,
-#     "SET_PASSWORD_RETYPE" : True,
-#     "PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND":True,
-#     'ACTIVATION_URL' : 'activate/{uid}/{token}',
-#     'SERIALIZERS':{
-#         'user_create': 'accounts.serializers.UserRegistrationSerializer',
-#         'user': 'accounts.serializers.CustomUserSerializer',
-#         'user_delete': 'accounts.serializers.UserDeleteSerializer',
-#         "current_user" : 'accounts.serializers.CustomUserSerializer',
-#     },
-#     "EMAIL" : {
-#         'password_reset': 'accounts.emails.CustomPasswordResetEmail',  
-#     } 
-# }
 
 
 REST_FRAMEWORK = {
@@ -346,12 +321,24 @@ if os.getenv("ENVIRONMENT") == "production":
 
 
 if os.getenv("ENVIRONMENT") == "development":
-    """
-    The in-development settings and the default configuration.
-    """
+
     DEBUG = True
 
+   
+    # DATABASES = {
+    #         'default': {
+    #             'ENGINE': 'django.db.backends.sqlite3',
+    #             'NAME': BASE_DIR / 'db.sqlite3'
+    #         }
+    #     }
+
+
+
+if os.getenv("ENVIRONMENT") == "local":
+
+    DEBUG = True
     
+
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -363,15 +350,3 @@ if os.getenv("ENVIRONMENT") == "development":
 
         }
     }
-
-
-
-if os.getenv("ENVIRONMENT") == "local":
-    
-    DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': BASE_DIR / 'db.sqlite3'
-            }
-        }
-
