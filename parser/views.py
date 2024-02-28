@@ -60,7 +60,7 @@ class ImageParser(APIView):
         data = {
             "status": "accepted",
             "code": 200,
-            "url": f"http://127.0.0.1:8000/v1/{id.created_at}/{id.unique_id}"
+            "url": f"https://adelekecode.dannonapi.com/v1/{id.created_at}/{id.unique_id}"
 
         }
 
