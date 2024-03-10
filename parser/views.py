@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from accounts.permissions import *
 # Create your views here.
+from django.http import FileResponse
 from django.http import HttpResponse
 import base64
 from .serializers import *
@@ -30,8 +31,12 @@ from django.utils.encoding import force_str
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 import requests
 import os
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+
 
 url = os.getenv("base_url")
+envs = os.getenv("ENVIRONMENT")
 
 
 class Welcome(APIView):
@@ -64,7 +69,9 @@ class ImageParser(APIView):
             b64=b64,
             user=user
         )
-
+        if envs == "dev":
+            url = "http://127.0.0.1:8000"
+        
 
         data = {
             "status": "accepted",
@@ -76,7 +83,7 @@ class ImageParser(APIView):
         return Response(data, status=200)
     
 
-
+@method_decorator(cache_page(30*60), name='dispatch')
 class ViewContent(APIView):
 
     def get(self, request, cr_at, id):

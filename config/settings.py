@@ -68,6 +68,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     
     'django.middleware.security.SecurityMiddleware',
+    'config.caching.GlobalCacheMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
@@ -318,17 +319,17 @@ if os.getenv("ENVIRONMENT") == "production":
 
 
 
-if os.getenv("ENVIRONMENT") == "local_pc":
+# if os.getenv("ENVIRONMENT") == "local_pc":
 
-    DEBUG = True
+#     DEBUG = True
 
    
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3'
-        }
-    }
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.sqlite3',
+#             'NAME': BASE_DIR / 'db.sqlite3'
+#         }
+#     }
 
 
 

@@ -273,7 +273,8 @@ class CreateUserSK(APIView):
         data = {
             "status": "success",
             "message": "account created & auth_key sent to your mail",
-            "code": "201"
+            "code": "201",
+            "key": user.sk
         }
 
         return Response(data, status=status.HTTP_201_CREATED)
