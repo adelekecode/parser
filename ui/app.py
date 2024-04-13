@@ -166,6 +166,9 @@ with get:
                             "url": st.column_config.LinkColumn("view image")
                         }
                     )
+                else:
+                    st.write(r.json())
+                    st.caption("Something went wrong, please try again")
 
 
                         
