@@ -20,10 +20,21 @@ from rest_framework.views import APIView
 from .models import *
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.models import Permission, Group
+from .emails import user_sk_mail
+import string
+import random
 from django.db.models import Q
 import requests
 import os
 
+
+
+def generate_sk():
+    
+    characters = string.ascii_letters + string.digits
+    random_string = ''.join(random.choice(characters) for _ in range(20))
+
+    return f"sk_{random_string}"
 
 
  
@@ -261,23 +272,54 @@ class CreateUserSK(APIView):
         serializer.is_valid(raise_exception=True)
 
         email = serializer.validated_data.get("email")
-        try:
+        if User.objects.filter(email=email).exists():
+            user = User.objects.get(email=email)
+            user.sk = generate_sk()
+            user.save()
+            data = {
+                "email": user.email,
+                "sk": user.sk,
+            }
+            # user_sk_mail(user)
+            return Response(data, status=200)
+        
+        else:
             user = User.objects.create(
-            email=email,
-            role='user'
-    
+                email=email,
+                sk = generate_sk(),
+                role='user'
+
             )
-        except Exception as e:
-            return Response({"error": f"{e}", "message": "user with this email already exist"}, status=status.HTTP_400_BAD_REQUEST)
+            data = {
+                "email": user.email,
+                "sk": user.sk,
+            }
 
-        data = {
-            "status": "success",
-            "message": "account created & auth_key sent to your mail",
-            "code": "201",
-            "key": user.sk
-        }
+            return Response(status=200)
 
-        return Response(data, status=status.HTTP_201_CREATED)
+
+
+class KeyValidator(APIView):
+
+    def post(self, request):
+
+        serializer = request.data
+        if "key" in serializer:
+            key = serializer["key"]
+            if User.objects.filter(sk=key).exists():
+                user = User.objects.get(sk=key)
+                data = {
+                    "email": user.email,
+
+                }
+                return Response(data, status=200)
+            else:
+                return Response(status=401)
+            
+        else:
+            return Response(status=403)
+            
+        
 
 
         

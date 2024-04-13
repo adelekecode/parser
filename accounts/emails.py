@@ -28,7 +28,7 @@ def user_sk_mail(user):
 <p>You have inititated the creation of your Parser Secret Key.
  which would be used as your authorization token.</p>
 
-<p>Here is your secret key: {str(user.sk).capitalize()}</p>
+<p>Here is your secret key: {str(user.sk).lower()}</p>
 <p>Protect your secret key</p>
 
 <p>Best regards,</p>

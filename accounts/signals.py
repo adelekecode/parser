@@ -13,7 +13,6 @@ from django.template.loader import render_to_string
 import json
 import os
 import  requests
-from .emails import user_sk_mail
 
 
 User = get_user_model()
@@ -30,7 +29,5 @@ def user_mail(sender, instance, created, **kwargs):
 
     if created:
 
-        user = instance
-        user_sk_mail(user)
 
         return

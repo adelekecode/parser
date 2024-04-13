@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from accounts.permissions import *
-# Create your views here.
 from django.http import FileResponse
 from django.http import HttpResponse
 import base64
@@ -71,7 +70,7 @@ class ImageParser(APIView):
         )
         if envs == "dev":
             url = "http://127.0.0.1:8000"
-            
+
         else:
             url = os.getenv("base_url")
         
@@ -106,11 +105,33 @@ class ViewContent(APIView):
 
         
 
+class GetImages(APIView):
 
+    def get(self, request):
 
+        email = request.data.get("email")
 
+        user = User.objects.get(email=email)
 
+        images = ImageEncoding.objects.filter(user=user).order_by("-created_at")
 
+        data = []
+        if envs == "dev":
+            url = "http://127.0.0.1:8000"
+
+        else:
+            url = os.getenv("base_url")
+
+        for image in images:
+            obj = {
+                "url": f"{url}/v1/{image.created_at}/{image.unique_id}",
+                "created_at": str(image.created_at),
+                "unique_id": str(image.unique_id)
+            }
+
+            data.append(obj)
+
+        return Response(data, status=200)
 
 
 

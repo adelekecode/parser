@@ -17,6 +17,7 @@ urlpatterns = [
     # path('auth/otp/new/', views.reset_otp),
     # path('auth/fcm-token/', views.update_firebase_token),
     path('user/', views.CreateUserSK.as_view(), name="create_user"),
+    path('user/key/', views.KeyValidator.as_view(), name="key_validator"),
 
 ]
    
