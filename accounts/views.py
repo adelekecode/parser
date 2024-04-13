@@ -295,7 +295,7 @@ class CreateUserSK(APIView):
                 "sk": user.sk,
             }
 
-            return Response(status=200)
+            return Response(data, status=200)
 
 
 

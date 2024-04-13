@@ -1,7 +1,6 @@
 import streamlit as st
 import requests
 import time
-from django.utils.encoding import force_bytes
 
 import streamlit as st
 import pandas as pd
@@ -37,7 +36,7 @@ if get_button:
         with st.spinner("Generating unique ID"):
             time.sleep(3)
             r = requests.post(
-                url= f"{localurl}/v1/user/",
+                url= f"{baseurl}v1/user/",
                 headers = {
                     "Content-Type": "application/json"
                 },
@@ -49,6 +48,7 @@ if get_button:
                 st.session_state["email"] = r.json()["email"]
                 st.session_state["key"] = r.json()["sk"]
             else:
+                # st.write(r.json())
                 st.sidebar.write("Something went wrong, please try again")
 
     
@@ -91,7 +91,7 @@ with gen:
                     time.sleep(3)
 
                     r = requests.post(
-                        url= f"{localurl}/v1/upload/content/",
+                        url= f"{baseurl}v1/upload/content/",
 
                         headers = {
 
@@ -110,7 +110,7 @@ with gen:
 
 
                     else:
-                        st.write(r.json())
+                        # st.write(r.json())
                         st.caption("Something went wrong, please try again")
             
                     
@@ -132,7 +132,7 @@ with get:
             with st.spinner("Fetching URLs..."):
                 time.sleep(3)
                 r = requests.get(
-                    url= f"{localurl}/v1/images/",
+                    url= f"{baseurl}v1/images/",
 
                      headers = {
                          "Content-Type": "application/json"
