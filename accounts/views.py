@@ -44,7 +44,6 @@ User = get_user_model()
 
 def get_query():
     
-    """returns query to be used to in the permissions view"""
     
     exclude_words = [ "activationotp", "activitylog", "moduleaccess", "logentry","group", "permission", "contenttype", "userinbox", "validationotp", "session", "blacklistedtoken", "outstandingtoken", "cart", ]
     
@@ -96,9 +95,6 @@ class CustomUserViewSet(UserViewSet):
             )
             return Response(status=status.HTTP_204_NO_CONTENT)
         
-        # elif password=="google" and request.user.provider=="google":
-        #     self.perform_destroy(instance)
-        #     return Response(status=status.HTTP_204_NO_CONTENT)
         else:
             raise AuthenticationFailed(detail={"message":"incorrect password"})
 
@@ -111,7 +107,6 @@ class CustomUserViewSet(UserViewSet):
 @api_view([ 'POST'])
 def user_login(request):
     
-    """Allows users to log in to the platform. Sends the jwt refresh and access tokens. Check settings for token life time."""
     
     if request.method == "POST":
         serializer = LoginSerializer(data=request.data)
@@ -280,7 +275,6 @@ class CreateUserSK(APIView):
                 "email": user.email,
                 "sk": user.sk,
             }
-            # user_sk_mail(user)
             return Response(data, status=200)
         
         else:
