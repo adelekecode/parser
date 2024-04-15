@@ -16,4 +16,4 @@ class EncodingSerializer(serializers.ModelSerializer):
 
 class Content(serializers.Serializer):
 
-    image = serializers.ImageField(max_length=None, use_url=True, required=True)
+    file = serializers.FileField(max_length=None, use_url=True, required=True)

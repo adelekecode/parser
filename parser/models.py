@@ -20,6 +20,7 @@ class ImageEncoding(models.Model):
     unique_id = models.CharField(max_length=100, unique=True, blank=True, null=True)
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="encoded_images")
     b64 = models.TextField()
+    file_type = models.CharField(max_length=100, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

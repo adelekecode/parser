@@ -61,12 +61,15 @@ class ImageParser(APIView):
         serializer = Content(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        image = serializer.validated_data['image']
-        b64 = base64.b64encode(image.read()).decode('utf-8')
+        file = serializer.validated_data['file']
+        b64 = base64.b64encode(file.read()).decode('utf-8')
+
 
         id = ImageEncoding.objects.create(
             b64=b64,
-            user=user
+            user=user,
+            file_type=file.content_type
+
         )
         if envs == "dev":
             url = "http://127.0.0.1:8000"
@@ -78,7 +81,10 @@ class ImageParser(APIView):
         data = {
             "status": "accepted",
             "code": 200,
-            "url": f"{url}/v1/{id.created_at}/{id.unique_id}"
+            "url": f"{url}/v1/{id.created_at}/{id.unique_id}",
+            "file_type": id.file_type,
+            "created_at": str(id.created_at),
+            "unique_id": str(id.unique_id)
 
         }
 
@@ -98,10 +104,13 @@ class ViewContent(APIView):
         if cr_at != str(b64.created_at):
             return Response({"status": "wrong timeframe"}, status=404)
         
-        image = b64.b64
-        img_bytes = base64.b64decode(image)
+        file = b64.b64
 
-        return HttpResponse(img_bytes, content_type="image/jpeg")
+        file_bytes = base64.b64decode(file)
+        if b64.file_type == None:
+            return HttpResponse(file_bytes, content_type="image/jpeg")
+       
+        return HttpResponse(file_bytes, content_type=str(b64.file_type))
 
         
 
