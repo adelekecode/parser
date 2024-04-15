@@ -36,7 +36,7 @@ if get_button:
         with st.spinner("Generating unique ID"):
             time.sleep(3)
             r = requests.post(
-                url= f"{baseurl}v1/user/",
+                url= f"{localurl}v1/user/",
                 headers = {
                     "Content-Type": "application/json"
                 },
@@ -73,7 +73,7 @@ with gen:
     con1 = st.container(border=True)
 
 
-    uploaded_file = con1.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
+    uploaded_file = con1.file_uploader("Choose a file to uplooad...")
 
     
     st.write("""
@@ -91,7 +91,7 @@ with gen:
                     time.sleep(3)
 
                     r = requests.post(
-                        url= f"{baseurl}v1/upload/content/",
+                        url= f"{localurl}v1/upload/content/",
 
                         headers = {
 
@@ -99,18 +99,25 @@ with gen:
                         },
 
                         files = {
-                            "image": (uploaded_file)
+                            "file": (uploaded_file)
+                        },
+
+                        data = {
+                            "file_type": uploaded_file.type
                         }
-                        
+
                     )
+
                     if r.status_code == 200:
+
+                        st.write(r.json())
 
                         st.caption("Image uploaded successfully")
                         st.link_button("view url", f"{r.json()['url']}")
 
 
                     else:
-                        # st.write(r.json())
+                        st.write(r.json())
                         st.caption("Something went wrong, please try again")
             
                     
@@ -132,7 +139,7 @@ with get:
             with st.spinner("Fetching URLs..."):
                 time.sleep(3)
                 r = requests.get(
-                    url= f"{baseurl}v1/images/",
+                    url= f"{localurl}v1/images/",
 
                      headers = {
                          "Content-Type": "application/json"
@@ -160,7 +167,7 @@ with get:
                         "created_at": ex_created_at
                     })
 
-                    con2.dataframe(
+                    st.dataframe(
                         df,
                         column_config={
                             "url": st.column_config.LinkColumn("view image")

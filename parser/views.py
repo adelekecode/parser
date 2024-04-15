@@ -62,15 +62,24 @@ class ImageParser(APIView):
         serializer.is_valid(raise_exception=True)
 
         file = serializer.validated_data['file']
+
+        if 'file_type' in serializer.validated_data:
+            file_type = serializer.validated_data['file_type']
+
+        else:
+            file_type = file.content_type
+
         b64 = base64.b64encode(file.read()).decode('utf-8')
 
 
         id = ImageEncoding.objects.create(
             b64=b64,
             user=user,
-            file_type=file.content_type
+            file_type=file_type
 
         )
+
+
         if envs == "dev":
             url = "http://127.0.0.1:8000"
 
@@ -104,13 +113,17 @@ class ViewContent(APIView):
         if cr_at != str(b64.created_at):
             return Response({"status": "wrong timeframe"}, status=404)
         
-        file = b64.b64
 
-        file_bytes = base64.b64decode(file)
+        file_bytes = base64.b64decode(b64.b64)
         if b64.file_type == None:
             return HttpResponse(file_bytes, content_type="image/jpeg")
+        
+        elif b64.file_type == "":
+            return HttpResponse(file_bytes, content_type="image/jpeg")
+        
+        else:
        
-        return HttpResponse(file_bytes, content_type=str(b64.file_type))
+            return HttpResponse(file_bytes, content_type=str(b64.file_type))
 
         
 
@@ -119,8 +132,10 @@ class GetImages(APIView):
     def get(self, request):
 
         email = request.data.get("email")
-
-        user = User.objects.get(email=email)
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response({"status": "user not found"}, status=404)
 
         images = ImageEncoding.objects.filter(user=user).order_by("-created_at")
 
